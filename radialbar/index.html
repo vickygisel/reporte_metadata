@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Radial Bar Chart example</title>
+    <style>
+
+#chart {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 14px;
+  color: #999;
+}
+#chart path {
+  fill: none;
+}
+
+/* layers */
+#chart .layer-0 path {
+  fill: steelblue;
+}
+#chart .layer-1 path {
+  fill: white !important;
+  opacity: 0.3;
+  stroke-width: 2px;
+  stroke: #999;
+}
+
+/* Outer circle, tick-circles and spokes */
+#chart circle.outer {
+  stroke: #fff;
+  stroke-dasharray: 4, 4;  
+}
+#chart .tick-circles circle {
+  stroke: #999;
+    stroke-width: 0.3;
+  /*stroke-dasharray: 4, 4;  */
+}
+#chart .spokes line {
+  stroke: #fff;
+  stroke-width: 0.2;
+}
+
+/* Axis */
+#chart .axis text {
+  font-size: 10px;
+  fill: #999;
+}
+#chart .axis path {
+  stroke: #999;
+  shape-rendering: crispEdges;
+}
+#chart .axis line {
+  stroke: #999;
+  shape-rendering: crispEdges;
+}
+
+/* Labels */
+#chart .labels text {
+  fill: #999;
+  font-size: 14px;
+  font-weight: 500;
+}
+        
+    </style>
+  </head>
+
+  <body>
+    <div id="chart"></div>
+
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/radialBarChart.js"></script>
+    <script>
+
+d3.json('data/data-mine.json', function(err, data) {
+  var chart = radialBarChart()
+    .barHeight(220)
+    .reverseLayerOrder(true)
+    .capitalizeLabels(true)
+    .barColors(['#3F3F4F', '#3F3F4F','#3F3F4F','#3F3F4F','#3F3F4F','#3F3F4F','#624947', '#624947', '#D36333','#D36333','#E8AC29','#E8AC29','#FAEEA5','#FAEEA5','#FAEEA5','#E8AC29','#E8AC29','#D36333','#D36333','#624947','#624947','#3F3F4F', '#3F3F4F','#3F3F4F'])
+    .domain([0,130])
+    .colorLabels(false)
+    .tickValues([20,40,60,80,100,120])
+    .tickCircleValues([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23])
+    .tickCircleValues([20,40,60,80,100,120])
+
+  d3.select('#chart')
+    .datum(data)
+    .call(chart);
+});
+
+    </script>
+  </body>
+</html>
