@@ -1,0 +1,7 @@
+,categoria,lat,lon,departamento_id,departamento_nombre,fuente,id,localidad_censal_id,localidad_censal_nombre,municipio_id,municipio_nombre,nombre,provincia_id,provincia_nombre
+1970,Localidad simple,-33.4994124052794,-58.800354170983404,30063.0,Islas del Ibicuy,INDEC,30063020000,30063020,Ceibas,,,CEIBAS,30,Entre Ríos
+2009,Componente de localidad compuesta,-31.8257355466309,-60.5182728163031,30084.0,Paraná,INDEC,30084150000,30084150,Oro Verde,,,ORO VERDE,30,Entre Ríos
+2010,Componente de localidad compuesta,-31.7415676426411,-60.5284145917589,30084.0,Paraná,INDEC,30084160000,30084160,Paraná,,,PARANA,30,Entre Ríos
+3066,Componente de localidad compuesta con entidad,-24.7823766403156,-65.4141329991055,66028.0,Capital,INDEC,66028050000,66028050,Salta,660063.0,Salta,SALTA,66,Salta
+3069,Entidad,-24.7865548806711,-65.3976354202705,66028.0,Capital,INDEC,66028050003,66028050,Salta,660063.0,Salta,SALTA,66,Salta
+3587,Componente de localidad compuesta,-31.645164805430998,-60.7093147118987,82063.0,La Capital,INDEC,82063170000,82063170,Santa Fe,820147.0,Santa Fe,SANTA FE,82,Santa Fe

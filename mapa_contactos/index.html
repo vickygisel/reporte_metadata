@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Barlow&display=swap" rel="stylesheet">
+<script src="//d3js.org/queue.v1.min.js"></script>
+<script src="d3.tip.v0.6.3.js"></script>    
+<link rel="stylesheet" href="styles.css">
+    
+<script>
+var width = 960,
+    height = 500;
+var projection = d3.geo.transverseMercator()
+                       .center([2.5, -38.5])
+                       .rotate([66, 0])
+                       .scale((height * 56.5) / 33)
+                       .translate([(width / 2), (height / 2)]);
+    
+var svg = d3.select("body")
+            .append("svg")
+              .attr("width", width)
+              .attr("height", height);
+var path = d3.geo.path()
+                 .projection(projection);
+var graticule = d3.geo.graticule()
+                      .extent([[-180,-90], [0,0]])
+                      .step([6, 6]);
+    
+var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return d.nombre;
+           // return "<strong>Contactos:</strong> <span style='color:#e1ef1f'>" + d.nombre + "</span>";
+  })
+    
+svg.append("path")
+   .datum(graticule)
+     .attr("class", "graticule")
+     .attr("d", path);
+    
+svg.call(tip);
+    
+var g = svg.append("g");
+    
+queue()
+    .defer(d3.json, "argentina_indec.json")
+    .defer(d3.csv, "localidades_filtradas.csv")
+    .await(ready);
+
+function ready(error, poligonos, localidades) {
+  if (error) throw error;    
+    
+    g.selectAll("text")
+       .data(topojson.feature(poligonos, poligonos.objects.provincias).features)
+       .enter()
+            .append("path")
+            .attr("d", path)
+            .attr("class", "provincia");
+
+    g.selectAll("circle")
+        .data(localidades)
+        .enter()
+           .append("circle")
+           .attr("class", "localidad")
+           .attr("cx", function(d) {
+               return projection([d.lon, d.lat])[0];
+           })
+           .attr("cy", function(d) {
+               return projection([d.lon, d.lat])[1];
+           })
+           .attr("r", 2)
+           .on("click", function () {
+                d3.select(".selected").classed("selected", false);
+                d3.select(this).classed("selected", true);
+            })
+           .on('mouseover', tip.show)
+           .on('mouseout', tip.hide)   
+    
+    ;
+}
+    
+    function clicked(d) {
+        updateInput(d);
+        updateInput2(d)
+      var x, y, k;
+
+      if (d && centered !== d) {
+        var centroid = path.centroid(d);
+        x = centroid[0];
+        y = centroid[1];
+        k = 5;
+        centered = d;
+      } else {
+        x = width / 2;
+          console.log("width: " + width);
+        y = height / 2;
+          console.log("height: " + height);
+        k = 1;
+        centered = null;
+      }
+
+      g.selectAll("path")
+          .classed("active", centered && function(d) { return d === centered; });
+
+      g.transition()
+          .duration(750)
+          .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+          .style("stroke-width", 1.5 / k + "px");
+    }
+
+        // zoom and pan
+    var zoom = d3.behavior.zoom()
+        .on("zoom",function() {
+            g.attr("transform","translate("+ 
+                d3.event.translate.join(",")+")scale("+d3.event.scale+")");
+            g.selectAll("circle")                
+                .attr("r", function(d) { return updatedScale(d.value); })
+                .attr("d", path.projection(projection))
+                .attr('stroke-width', 1 / this._scale)
+            g.selectAll("path")  
+                .attr("d", path.projection(projection))
+            g.selectAll("text")
+                .attr("font-size", function(d) { return updatedScale(5); }); 
+
+      });
+
+    svg.call(zoom)
+
+
+d3.select(self.frameElement).style("height", height + "px");
+</script>
+</body>
